@@ -11,15 +11,51 @@ class CounterView extends StatefulWidget {
 class _CounterViewState extends State<CounterView> {
   final CounterController _controller = CounterController();
 
+  void _showResetDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Reset hitungan"),
+          content: const Text(
+            "Aksi ini akan me-reset hitungan kembali menjadi 0",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  Navigator.pop(context);
+                  _controller.reset();
+                });
+              },
+              child: const Text("Lanjutkan"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Logbook versi SRP")),
-      body: Center(
+      body: Padding(
+        padding: EdgeInsetsGeometry.only(left: 10),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Total hitungan"),
-            Text("${_controller.value}", style: const TextStyle(fontSize: 40)),
+            const Center(child: Text("Total hitungan")),
+            Center(
+              child: Text(
+                "${_controller.value}",
+                style: const TextStyle(fontSize: 40),
+              ),
+            ),
             Row(
               children: [
                 Text("Step: ${_controller.step}"),
@@ -35,7 +71,9 @@ class _CounterViewState extends State<CounterView> {
               ],
             ),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 4,
+
               children: [
                 OutlinedButton(
                   onPressed: () => setState(() => _controller.increment()),
@@ -48,15 +86,17 @@ class _CounterViewState extends State<CounterView> {
                   child: Text("Kurang"),
                 ),
                 OutlinedButton(
-                  onPressed: () => setState(() => _controller.reset()),
+                  onPressed: () => setState(() => _showResetDialog(context)),
                   style: ButtonStyle(),
                   child: Text("Reset"),
                 ),
               ],
             ),
-            const Text(
-              "History",
-              style: TextStyle(fontSize: 42, fontWeight: FontWeight.w700),
+            Center(
+              child: const Text(
+                "History",
+                style: TextStyle(fontSize: 42, fontWeight: FontWeight.w700),
+              ),
             ),
             const Divider(),
             Expanded(
@@ -65,16 +105,21 @@ class _CounterViewState extends State<CounterView> {
                     ? 5
                     : _controller.history.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return Text(_controller.history[index]);
+                  Color textColor = switch (_controller.history[index][0]) {
+                    '-' => Color.fromRGBO(255, 0, 0, 1.0),
+                    '+' => Color(0xff4d9900),
+                    _ => Color.fromRGBO(0, 0, 0, 1.0),
+                  };
+
+                  return Text(
+                    _controller.history[index],
+                    style: TextStyle(color: textColor),
+                  );
                 },
               ),
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => setState(() => _controller.increment()),
-        child: const Icon(Icons.add),
       ),
     );
   }

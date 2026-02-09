@@ -2,6 +2,16 @@ import 'dart:collection';
 
 import 'package:intl/intl.dart';
 
+enum ActionType { add, delete, reset }
+
+class HistoryData {
+  ActionType action;
+  DateTime timestamp;
+  int value;
+
+  HistoryData(this.action, this.value, this.timestamp);
+}
+
 class CounterController {
   int step = 1;
   int _counter = 0;
@@ -17,6 +27,7 @@ class CounterController {
   void decrement() {
     if (_counter > 0) {
       _counter -= step;
+      if (_counter < 0) _counter = 0;
       pushHistory("-$step : ${now()}");
     }
   }
