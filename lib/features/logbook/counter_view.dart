@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:logbook_app_001/features/onboarding/onboarding_view.dart';
 import 'counter_controller.dart';
 
 class CounterView extends StatefulWidget {
-  const CounterView({super.key});
+  final String username;
+  const CounterView({super.key, required this.username});
 
   @override
   State<CounterView> createState() => _CounterViewState();
 }
 
 class _CounterViewState extends State<CounterView> {
-  final CounterController _controller = CounterController();
+  late CounterController _controller;
+  bool _isLoading = true;
+  @override
+  void initState() {
+    super.initState();
+    _setupController();
+  }
+
+  Future<void> _setupController() async {
+    _controller = await CounterController.init(widget.username);
+    setState(() => _isLoading = false);
+  }
 
   void _showResetDialog(BuildContext context) {
     showDialog(
@@ -29,6 +42,9 @@ class _CounterViewState extends State<CounterView> {
               onPressed: () {
                 setState(() {
                   Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Counter berhasil di reset")),
+                  );
                   _controller.reset();
                 });
               },
@@ -40,15 +56,83 @@ class _CounterViewState extends State<CounterView> {
     );
   }
 
+  void _handleLogout() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Konfirmasi Logout"),
+          content: const Text(
+            "Apakah Anda yakin? Data yang belum disimpan mungkin hilang",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Batal"),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  Navigator.pop(context);
+
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const OnboardingView(),
+                    ),
+                    (route) => false,
+                  );
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Berhasil Logout")),
+                  );
+                  _controller.reset();
+                });
+              },
+              child: const Text("Ya, keluar"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _handleSave() {
+    _controller.saveCounter().then((value) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Berhasil Menyimpan")));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     return Scaffold(
-      appBar: AppBar(title: const Text("Logbook versi SRP")),
+      appBar: AppBar(
+        title: const Text("Logbook versi SRP"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () => {_handleLogout()},
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.save),
+        onPressed: () => {_handleSave()},
+      ),
       body: Padding(
         padding: EdgeInsetsGeometry.only(left: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Center(child: Text("Halo ${widget.username}")),
             const Center(child: Text("Total hitungan")),
             Center(
               child: Text(
