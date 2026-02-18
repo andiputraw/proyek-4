@@ -132,7 +132,15 @@ class _CounterViewState extends State<CounterView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(child: Text("Halo ${widget.username}")),
+            Center(
+              child: Text(
+                "Selamat ${DateTime.now().hour < 12
+                    ? 'Pagi'
+                    : DateTime.now().hour < 18
+                    ? 'Malam'
+                    : 'Siang'} ${widget.username}",
+              ),
+            ),
             const Center(child: Text("Total hitungan")),
             Center(
               child: Text(
@@ -201,6 +209,21 @@ class _CounterViewState extends State<CounterView> {
                   );
                 },
               ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(3, (index) {
+                return Container(
+                  margin: EdgeInsets.symmetric(horizontal: 4.0, vertical: 20.0),
+                  width: 12.0,
+                  height: 12.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    // Change color based on current index
+                    color: 2 == index ? Colors.blue : Colors.grey,
+                  ),
+                );
+              }),
             ),
           ],
         ),

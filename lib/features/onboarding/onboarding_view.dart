@@ -35,7 +35,7 @@ class _OnboardingState extends State<OnboardingView> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text("Halaman Onboarding"),
+              Image.asset("assets/images/${(_controller.step % 3) + 1}.png"),
               Text(
                 _controller.step.toString(),
                 style: TextStyle(fontSize: 48, fontWeight: FontWeight.w700),
@@ -43,6 +43,24 @@ class _OnboardingState extends State<OnboardingView> {
               TextButton(
                 onPressed: () => setState(() => _handleContinue()),
                 child: Text("Lanjut"),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(3, (index) {
+                  return Container(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 4.0,
+                      vertical: 20.0,
+                    ),
+                    width: 12.0,
+                    height: 12.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      // Change color based on current index
+                      color: 0 == index ? Colors.blue : Colors.grey,
+                    ),
+                  );
+                }),
               ),
             ],
           ),

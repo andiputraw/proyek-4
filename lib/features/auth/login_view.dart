@@ -68,6 +68,21 @@ class _LoginViewState extends State<LoginView> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(onPressed: _handleLogin, child: const Text("Masuk")),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(3, (index) {
+                return Container(
+                  margin: EdgeInsets.symmetric(horizontal: 4.0, vertical: 20.0),
+                  width: 12.0,
+                  height: 12.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    // Change color based on current index
+                    color: 1 == index ? Colors.blue : Colors.grey,
+                  ),
+                );
+              }),
+            ),
           ],
         ),
       ),
