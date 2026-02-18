@@ -11,12 +11,12 @@ class OnboardingView extends StatefulWidget {
 }
 
 class _OnboardingState extends State<OnboardingView> {
-  OnboardingController _controller = OnboardingController();
+  final OnboardingController _controller = OnboardingController();
 
   void _handleContinue() {
     _controller.incrementStep();
 
-    if (_controller.step > 3) {
+    if (_controller.step >= 3) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => LoginView()),
@@ -36,10 +36,6 @@ class _OnboardingState extends State<OnboardingView> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.asset("assets/images/${(_controller.step % 3) + 1}.png"),
-              Text(
-                _controller.step.toString(),
-                style: TextStyle(fontSize: 48, fontWeight: FontWeight.w700),
-              ),
               TextButton(
                 onPressed: () => setState(() => _handleContinue()),
                 child: Text("Lanjut"),
@@ -57,7 +53,9 @@ class _OnboardingState extends State<OnboardingView> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       // Change color based on current index
-                      color: 0 == index ? Colors.blue : Colors.grey,
+                      color: _controller.step == index
+                          ? Colors.blue
+                          : Colors.grey,
                     ),
                   );
                 }),

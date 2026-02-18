@@ -86,7 +86,6 @@ class _CounterViewState extends State<CounterView> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("Berhasil Logout")),
                   );
-                  _controller.reset();
                 });
               },
               child: const Text("Ya, keluar"),
@@ -95,16 +94,6 @@ class _CounterViewState extends State<CounterView> {
         );
       },
     );
-  }
-
-  void _handleSave() {
-    _controller.saveCounter().then((value) {
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Berhasil Menyimpan")));
-    });
   }
 
   @override
@@ -123,10 +112,6 @@ class _CounterViewState extends State<CounterView> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.save),
-        onPressed: () => {_handleSave()},
-      ),
       body: Padding(
         padding: EdgeInsetsGeometry.only(left: 10),
         child: Column(
@@ -136,7 +121,7 @@ class _CounterViewState extends State<CounterView> {
               child: Text(
                 "Selamat ${DateTime.now().hour < 12
                     ? 'Pagi'
-                    : DateTime.now().hour < 18
+                    : DateTime.now().hour > 18
                     ? 'Malam'
                     : 'Siang'} ${widget.username}",
               ),
@@ -209,21 +194,6 @@ class _CounterViewState extends State<CounterView> {
                   );
                 },
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(3, (index) {
-                return Container(
-                  margin: EdgeInsets.symmetric(horizontal: 4.0, vertical: 20.0),
-                  width: 12.0,
-                  height: 12.0,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    // Change color based on current index
-                    color: 2 == index ? Colors.blue : Colors.grey,
-                  ),
-                );
-              }),
             ),
           ],
         ),

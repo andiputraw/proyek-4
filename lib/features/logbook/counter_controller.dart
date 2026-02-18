@@ -47,6 +47,7 @@ class CounterController {
 
     await prefs.setInt(_buildCounterKey(_username), value);
     await prefs.setStringList(_buildLogsKey(_username), history);
+    print("Counter saved $value");
   }
 
   void increment() {
@@ -67,11 +68,12 @@ class CounterController {
     pushHistory("reset : ${now()}");
   }
 
-  void pushHistory(String str) {
+  void pushHistory(String str) async {
     if (_history.length >= 5) {
       _history.removeFirst();
     }
     _history.addLast(str);
+    await saveCounter();
   }
 
   String now() {
