@@ -14,37 +14,56 @@ class _OnboardingState extends State<OnboardingView> {
   final OnboardingController _controller = OnboardingController();
 
   void _handleContinue() {
-    _controller.incrementStep();
-
-    if (_controller.step >= 3) {
+    if (_controller.step >= 2) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => LoginView()),
       );
+      return;
     }
+
+    _controller.incrementStep();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Preload all onboarding images into memory so they swap instantly
+    precacheImage(const AssetImage("assets/images/Emilie_1.png"), context);
+    precacheImage(const AssetImage("assets/images/Emilie_2.png"), context);
+    precacheImage(const AssetImage("assets/images/Emilie_3.png"), context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Onboarding")),
+      appBar: AppBar(title: const Text("Onboarding")),
       body: Padding(
-        padding: EdgeInsetsGeometry.only(left: 20),
+        padding: const EdgeInsetsGeometry.only(
+          left: 20,
+        ), // Note: might want EdgeInsets.symmetric(horizontal: 20) instead to keep it centered!
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset("assets/images/${(_controller.step % 3) + 1}.png"),
+              // Constrain the size and set how it should fit
+              Image.asset(
+                "assets/images/Emilie_${(_controller.step % 3) + 1}.png",
+                height: 200, // Adjust this number to fit your design
+                width: double.infinity,
+                fit: BoxFit.contain, // Prevents stretching
+              ),
+              const SizedBox(height: 20), // Added a little breathing room
               TextButton(
                 onPressed: () => setState(() => _handleContinue()),
-                child: Text("Lanjut"),
+                child: const Text("Lanjut"),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(3, (index) {
                   return Container(
-                    margin: EdgeInsets.symmetric(
+                    margin: const EdgeInsets.symmetric(
                       horizontal: 4.0,
                       vertical: 20.0,
                     ),
@@ -52,7 +71,6 @@ class _OnboardingState extends State<OnboardingView> {
                     height: 12.0,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      // Change color based on current index
                       color: _controller.step == index
                           ? Colors.blue
                           : Colors.grey,

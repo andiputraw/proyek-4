@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logbook_app_001/features/onboarding/onboarding_view.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:logbook_app_001/features/logbook/models/log_model.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Load ENV
+  await dotenv.load(fileName: ".env");
+  await Hive.initFlutter();
+  Hive.registerAdapter(LogModelAdapter());
+
+  Hive.registerAdapter(LogCategoryAdapter());
+  // await Hive.openBox<LogModel>('offline_logs');
   runApp(const MyApp());
 }
 
@@ -14,7 +25,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      ),
       home: const OnboardingView(),
     );
   }
