@@ -3,9 +3,17 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logbook_app_001/features/onboarding/onboarding_view.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logbook_app_001/features/logbook/models/log_model.dart';
+import 'package:camera/camera.dart';
+
+List<CameraDescription> cameras = [];
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  try {
+    cameras = await availableCameras();
+  } catch (e) {
+    print(e);
+  }
   // Load ENV
   await dotenv.load(fileName: ".env");
   await Hive.initFlutter();

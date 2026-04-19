@@ -4,6 +4,7 @@ import 'package:logbook_app_001/features/auth/login_controller.dart';
 import 'package:logbook_app_001/features/auth/model/login_data.dart';
 // Import View dari fitur lain (Logbook) untuk navigasi
 import 'package:logbook_app_001/features/logbook/log_view.dart';
+import 'package:logbook_app_001/features/vision/vision_view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -58,6 +59,13 @@ class _LoginViewState extends State<LoginView> {
         ),
       );
     }
+  }
+
+  void _handleGoToCamera() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => VisionView()),
+    );
   }
 
   @override
@@ -163,6 +171,31 @@ class _LoginViewState extends State<LoginView> {
                           ),
                           child: const Text(
                             "LOGIN",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing:
+                                  1.2, // Memberi jarak antar huruf biar elegan
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: double
+                            .infinity, // Tombol melebar penuh mengikuti card
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: _handleGoToCamera,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.greenAccent.shade700,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 2,
+                          ),
+                          child: const Text(
+                            "MODE KAMERA",
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,

@@ -35,9 +35,7 @@ class LogController {
       await loadFromDisk();
   }
 
-  LogController({required this.username, required this.currentUser}) {
-    loadFromDisk();
-  }
+  LogController({required this.username, required this.currentUser});
 
   void refreshUI(List<LogModel> logs) {
     logsNotifier.value = List.from(logs);

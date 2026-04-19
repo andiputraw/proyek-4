@@ -1,10 +1,14 @@
+import 'package:meta/meta.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logbook_app_001/features/logbook/models/log_model.dart';
 import 'package:logbook_app_001/helpers/log_helper.dart';
 
 class MongoService {
-  static final MongoService _instance = MongoService._internal();
+  static MongoService _instance = MongoService._internal();
+
+  @visibleForTesting
+  static set instance(MongoService service) => _instance = service;
 
   // Menggunakan nullable agar kita bisa mengecek status inisialisasi
   Db? _db;
